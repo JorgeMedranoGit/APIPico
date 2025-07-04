@@ -14,7 +14,21 @@ const pool = new Pool({
 
 app.use(express.json())
 
-// POST /lectures: recibe datos en body JSON
+// Función para convertir "null", "NULL", vacío o undefined en null real
+const parseNullable = (value) => {
+  if (
+    value === undefined ||
+    value === null ||
+    value === 'null' ||
+    value === 'NULL' ||
+    value === ''
+  ) {
+    return null
+  }
+  return value
+}
+
+// POST /lectures - inserta datos desde el body JSON
 app.post('/lectures', async (req, res) => {
   const {
     data,
@@ -26,10 +40,15 @@ app.post('/lectures', async (req, res) => {
   try {
     const result = await pool.query(
       `INSERT INTO ambiental_lectures 
-       (data, id_sensor_assignment_crop, id_sensor_assignment_greenhouse, id_measurement_type)
+        (data, id_sensor_assignment_crop, id_sensor_assignment_greenhouse, id_measurement_type)
        VALUES ($1, $2, $3, $4)
        RETURNING *`,
-      [data, id_sensor_assignment_crop, id_sensor_assignment_greenhouse, id_measurement_type]
+      [
+        data,
+        parseNullable(id_sensor_assignment_crop),
+        parseNullable(id_sensor_assignment_greenhouse),
+        id_measurement_type
+      ]
     )
     res.status(201).json(result.rows[0])
   } catch (err) {
@@ -38,7 +57,7 @@ app.post('/lectures', async (req, res) => {
   }
 })
 
-// GET /lectures: recibe datos en query string (URL)
+// GET /lectures - inserta datos desde la query string
 app.get('/lectures', async (req, res) => {
   const {
     data,
@@ -50,10 +69,15 @@ app.get('/lectures', async (req, res) => {
   try {
     const result = await pool.query(
       `INSERT INTO ambiental_lectures 
-       (data, id_sensor_assignment_crop, id_sensor_assignment_greenhouse, id_measurement_type)
+        (data, id_sensor_assignment_crop, id_sensor_assignment_greenhouse, id_measurement_type)
        VALUES ($1, $2, $3, $4)
        RETURNING *`,
-      [data, id_sensor_assignment_crop, id_sensor_assignment_greenhouse, id_measurement_type]
+      [
+        data,
+        parseNullable(id_sensor_assignment_crop),
+        parseNullable(id_sensor_assignment_greenhouse),
+        parseNullable(id_measurement_type)
+      ]
     )
     res.status(201).json(result.rows[0])
   } catch (err) {
