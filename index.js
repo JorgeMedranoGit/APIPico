@@ -27,7 +27,7 @@ app.post('/lectures', async (req, res) => {
     const result = await pool.query(
       `INSERT INTO ambiental_lectures 
        (data, id_sensor_assignment_crop, id_sensor_assignment_greenhouse, id_measurement_type)
-       VALUES ($1, $2, $3, $4, $5)
+       VALUES ($1, $2, $3, $4)
        RETURNING *`,
       [data, id_sensor_assignment_crop, id_sensor_assignment_greenhouse, id_measurement_type]
     )
@@ -51,7 +51,7 @@ app.get('/lectures', async (req, res) => {
     const result = await pool.query(
       `INSERT INTO ambiental_lectures 
        (data, id_sensor_assignment_crop, id_sensor_assignment_greenhouse, id_measurement_type)
-       VALUES ($1, $2, $3, $4, $5)
+       VALUES ($1, $2, $3, $4)
        RETURNING *`,
       [data, id_sensor_assignment_crop, id_sensor_assignment_greenhouse, id_measurement_type]
     )
